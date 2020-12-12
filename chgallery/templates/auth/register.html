@@ -1,7 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}<form method="post" action="">
   {{ form.csrf_token }}
-  {{ form.name.label }} {{ form.name(size=20) }}
-  {{ form.recaptcha }}
-  <input type="submit" value="register">
+  <div class="form-group">
+    <label for="{{ form.username.id }}">{{ form.username.label }}</label> 
+    {{ form.username(size=20, class='form-control') }}
+    {% if form.username.errors %}<div class="alert alert-danger"><ul>
+      {% for error in form.username.errors %}<li>
+        {{ error }}
+      </li>{% endfor %}
+    </ul></div>{% endif %}
+  </div>
+  <div class="form-group">
+    <label for="{{ form.email.id }}">{{ form.email.label }}</label> 
+    {{ form.email(size=20, class='form-control') }}
+    {% if form.email.errors %}<div class="alert alert-danger"><ul>
+      {% for error in form.email.errors %}<li>
+        {{ error }}
+      </li>{% endfor %}
+    </ul></div>{% endif %}
+  </div>
+  <div class="form-group">
+    <label for="{{ form.password.id }}">{{ form.password.label }}</label>
+    {{ form.password(size=64, class='form-control') }}
+    {% if form.password.errors %}<div class="alert alert-danger"><ul>
+      {% for error in form.password.errors %}<li>
+        {{ error }}
+      </li>{% endfor %}
+    </ul></div>{% endif %}
+  </div>
+  <div class="form-group">
+    <label for="{{ form.password_repeat.id }}">{{ form.password_repeat.label }}</label>
+    {{ form.password_repeat(size=64, class='form-control') }}
+    {% if form.password_repeat.errors %}<div class="alert alert-danger"><ul>
+      {% for error in form.password_repeat.errors %}<li>
+        {{ error }}
+      </li>{% endfor %}
+    </ul></div>{% endif %}
+  </div>
+  <input type="submit" value="register" class="btn btn-primary">
 </form>{% endblock %}
