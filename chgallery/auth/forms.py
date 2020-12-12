@@ -6,6 +6,11 @@ from chgallery.db import get_db_session
 from chgallery.db.declarative import User
 
 
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+
+
 class RegisterForm(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(), Email()])
