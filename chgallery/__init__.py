@@ -23,4 +23,13 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    @app.route('/')
+    def index():
+        from flask import render_template
+        from chgallery.auth.forms import RegisterForm
+        return render_template('auth/register.html', form=RegisterForm())
+
+    from chgallery.db import init_app
+    init_app(app)
+
     return app

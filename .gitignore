@@ -4,4 +4,6 @@
 *.pyc
 
 *.egg-info/
+/instance/
 __pycache__/
+/config.py
