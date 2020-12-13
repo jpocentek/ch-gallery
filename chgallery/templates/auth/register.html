@@ -1,8 +1,8 @@
-{% extends 'auth/base.html' %}
+{% extends 'base.html' %}
 {% block content %}<form method="post" action="">
   {{ form.csrf_token }}
   <div class="form-group">
-    <label for="{{ form.username.id }}">{{ form.username.label }}</label> 
+    <label for="{{ form.username.id }}">{{ form.username.label }}</label>
     {{ form.username(size=20, class='form-control') }}
     {% if form.username.errors %}<div class="alert alert-danger"><ul>
       {% for error in form.username.errors %}<li>
@@ -11,7 +11,7 @@
     </ul></div>{% endif %}
   </div>
   <div class="form-group">
-    <label for="{{ form.email.id }}">{{ form.email.label }}</label> 
+    <label for="{{ form.email.id }}">{{ form.email.label }}</label>
     {{ form.email(size=20, class='form-control') }}
     {% if form.email.errors %}<div class="alert alert-danger"><ul>
       {% for error in form.email.errors %}<li>

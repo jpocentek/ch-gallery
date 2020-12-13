@@ -29,4 +29,7 @@ def create_app(test_config=None):
     from chgallery import auth
     app.register_blueprint(auth.bp)
 
+    from chgallery import image
+    app.register_blueprint(image.bp)
+
     return app

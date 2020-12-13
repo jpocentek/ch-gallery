@@ -76,8 +76,10 @@ def logout():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
+    g.user = None
 
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = get_db_session().query(User).filter(User.id == user_id).one()
+    if user_id is not None:
+        try:
+            g.user = get_db_session().query(User).filter(User.id == user_id).one()
+        except NoResultFound:
+            pass
