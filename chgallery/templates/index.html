@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block content %}<h1>Index page</h1>
+{% for image in images %}<img src="{{ image.thumbnail_url() }}">{% endfor %}
+{% endblock %}

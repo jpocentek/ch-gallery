@@ -1,3 +1,4 @@
+from flask import url_for
 from sqlalchemy import (
     Column,
     DateTime,
@@ -22,7 +23,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
 
     def __str__(self):
-        return "{0}: {1}".format(self.__class__.__name__, self.username)
+        return self.username
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.username)
@@ -35,6 +36,8 @@ class Image(Base):
     name = Column(String, unique=True, nullable=False, index=True)
     description = Column(String, nullable=False, default="")
     creation_date = Column(DateTime, server_default=func.now())
+    width = Column(Integer, nullable=False)
+    height = Column(Integer, nullable=False)
     author_id = Column(Integer, ForeignKey('user.id'))
     author = relationship(User, backref=backref('images', uselist=True))
 
@@ -43,3 +46,9 @@ class Image(Base):
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.name)
+
+    def url(self):
+        return url_for('image.uploaded_file', filename=self.name)
+
+    def thumbnail_url(self):
+        return url_for('image.uploaded_file_thumbnail', filename=self.name)

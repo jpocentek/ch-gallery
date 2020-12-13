@@ -1,5 +1,8 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
+
+from chgallery.db import get_db_session
+from chgallery.db.declarative import Image
 
 
 def create_app(test_config=None):
@@ -8,6 +11,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'chgallery.sqlite'),
+        UPLOAD_PATH=os.path.join(app.instance_path, 'uploads'),
     )
 
     if test_config is None:
@@ -22,6 +26,18 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    # create directory for uploaded file if doesn't exist
+    try:
+        os.makedirs(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
+    except OSError:
+        pass
+
+    # basic view for non-registered users
+    @app.route('/')
+    def index():
+        images = get_db_session().query(Image).all()
+        return render_template('index.html', images=images)
 
     from chgallery.db import init_app
     init_app(app)
