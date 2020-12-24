@@ -3,19 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/bundle.css') }}">
     <title>Simple Image Gallery</title>
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#">Simple Image Gallery</a>
+    <nav class="navbar navbar-expand-md bg-dark fixed-top">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Simple Image Gallery</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMainControl" aria-controls="navbarMainControl" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarMainControl">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav ml-auto">
           {% if g.user %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('image.upload') }}">Upload</a>
