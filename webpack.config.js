@@ -8,13 +8,16 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
 
   // Path to your entry point. From this file Webpack will begin his work
-  entry: './src/js/index.js',
+  entry: {
+    main: './src/js/main.js',
+    gallery: './src/js/gallery.js'
+  },
 
   // Path and filename of your result bundle.
   // Webpack will bundle all JavaScript into this file
   output: {
     path: path.resolve(__dirname, 'chgallery/static/dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
 
     // See: https://stackoverflow.com/questions/64294706/webpack5-automatic-publicpath-is-not-supported-in-this-browser
     publicPath: ''
@@ -59,35 +62,6 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               implementation: require('sass')
-            }
-          }
-        ]
-      },
-      {
-        // Now we apply rule for images
-        test: /\.(png|jpe?g|git|svg)$/,
-        use: [
-          {
-            // Using file loader with these files
-            loader: 'file-loader',
-
-            // In options we can set different things like format
-            // and directory to save
-            options: {
-              outputPath: 'images'
-            }
-          }
-        ]
-      },
-      {
-        // Apply rule for font files
-        test: /\.(woff|woff2|ttf|otf|eot)$/,
-        use: [
-          {
-            // Using file loader too
-            loader: 'file-loader',
-            options: {
-              outputPath: 'fonts'
             }
           }
         ]
