@@ -1,6 +1,7 @@
 import 'bootstrap';
-import 'photoswipe';
+import $ from 'jquery';
 
 import '../sass/style.scss';
 
-console.log('Hello from gallery!');
+console.log(PhotoSwipeUI_Default);
+console.log(PhotoSwipe);

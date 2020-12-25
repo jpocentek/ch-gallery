@@ -1,6 +1,17 @@
+// https://github.com/dimsemenov/PhotoSwipe/issues/1374
+$pswp__assets-path: "~photoswipe/src/css/default-skin/";
+
 @import "_variables";
 @import "~bootstrap/scss/bootstrap";
+@import "~photoswipe/src/css/main";
+@import "~photoswipe/src/css/default-skin/default-skin";
 
 main {
   padding-top: 75px;
+}
+
+.gallery {
+  figure {
+    text-align: center;
+  }
 }

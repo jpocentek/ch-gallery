@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Index page</h1>
-
 <div class="gallery" itemscope itemtype="http://schema.org/ImageGallery">
   <div class="row">
     {% for image in images %}
-    {% if loop.index0 > 0 and loop.index0 % 3 == 0 %}</div><div class="row">{% endif %}
     <figure class="col-sm-4" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
       <a href="{{ image.url() }}" itemprop="contentUrl" data-size="{{ image.width }}x{{ image.height }}">
         <img src="{{ image.thumbnail_url() }}" itemprop="thumbnail" alt="Image description">
       </a>
       <figcaption itemprop="caption description">{{ image.description }}</figcaption>
     </figure>
+    {% if loop.last or loop.index % 3 == 0 %}</div>{% if not loop.last %}<div class="row">{% endif %}{% endif %}
     {% endfor %}
-  </div>
 </div>
 
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">

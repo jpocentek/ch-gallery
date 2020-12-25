@@ -1,6 +1,6 @@
 // Webpack uses this to work with directories
 const path = require('path');
-
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // This is the main configuration object
@@ -65,6 +65,22 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        // Now we apply rule for images
+        test: /\.(png|jpe?g|gif|svg)$/,
+        use: [
+          {
+            // Using file loader with these files
+            loader: 'file-loader',
+
+            // In options we can set different things like format
+            // and directory to save
+            options: {
+              outputPath: 'images'
+            }
+          }
+        ]
       }
     ]
   },
@@ -72,7 +88,12 @@ module.exports = {
   plugins: [
 
     new MiniCssExtractPlugin({
-      filename: 'bundle.css'
+      filename: 'style.css'
+    }),
+
+    new webpack.ProvidePlugin({
+      PhotoSwipe: 'photoswipe',
+      PhotoSwipeUI_Default: 'photoswipe/src/js/ui/photoswipe-ui-default.js'
     })
 
   ],
