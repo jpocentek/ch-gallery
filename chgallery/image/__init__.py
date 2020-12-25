@@ -20,7 +20,7 @@ from chgallery.db import get_db_session
 from chgallery.db.declarative import Image
 
 from chgallery.image.forms import UploadForm
-from chgallery.image.utils import smart_resize, smart_thumbnail
+from chgallery.image.utils import smart_resize
 
 
 bp = Blueprint('image', __name__, url_prefix='/image')
@@ -67,7 +67,7 @@ def upload():
 
         # Save both images - resized version and thumbnail
         img.save(os.path.join(current_app.config['UPLOAD_PATH'], image.name), img.format)
-        img = smart_thumbnail(img)
+        img.thumbnail((250, 250))
         img.save(os.path.join(current_app.config['UPLOAD_PATH'], 'thumbs', image.name), img.format)
 
         flash('Image uploaded successfully')

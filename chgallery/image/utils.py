@@ -19,8 +19,3 @@ def smart_resize(image, max_size=2000):
         new_width = int(new_height / image.height * image.width)
 
     return image.resize((new_width, new_height))
-
-
-def smart_thumbnail(image, max_width=250):
-    height = int(max_width / image.width * image.height)
-    return image.resize((max_width, height))
