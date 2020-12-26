@@ -1,7 +1,8 @@
 # Editor temp files
 *.swp
-
 *.pyc
+
+.coverage
 
 *.egg-info/
 /instance/

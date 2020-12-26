@@ -17,12 +17,12 @@ class RegisterForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()])
     password_repeat = PasswordField('repeat password', validators=[EqualTo('password')])
 
-    def validate_username(form, field):
+    def validate_username(self, field):
         session = get_db_session()
         if session.query(User).filter(User.username == field.data).scalar() is not None:
             raise ValidationError('User {} already exists'.format(field.data))
 
-    def validate_email(form, field):
+    def validate_email(self, field):
         session = get_db_session()
         if session.query(User).filter(User.email == field.data).scalar() is not None:
             raise ValidationError('Email already taken')
