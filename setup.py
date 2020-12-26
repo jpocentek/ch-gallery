@@ -10,7 +10,7 @@ setup(
         'flask>=1.1.2',
         'sqlalchemy>=1.3.20',
         'flask-wtf>=0.14.3',
-        'email-validator>=1.1.2'
+        'email-validator>=1.1.2',
         'pillow>=8.0.1',
     ],
 )
