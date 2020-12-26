@@ -29,7 +29,7 @@ function getItems() {
 // Parse GET parameters from url to open selected
 // image when user enters page.
 function photoswipeParseHash() {
-  var hash = window.location.hash.substring(1);
+  var hash = window.location.hash.substring(1),
     params = {},
     vars;
 
@@ -53,26 +53,39 @@ function photoswipeParseHash() {
     params.gid = parseInt(params.gid, 10);
   }
 
+  if (params.pid) {
+    params.pid = parseInt(params.pid, 10);
+  }
+
   return params;
+}
+
+function openPhotoSwipe(index) {
+  var options = { index: index };
+  var gallery = new PhotoSwipe(pswp, PhotoSwipeUI_Default, items, options);
+  gallery.init();
 }
 
 // Initialize gallery when user click on image.
 function onThumbnailClick(e) {
   e.preventDefault();
-
-  var options = {
-    index: $(e.currentTarget).data('index')
-  };
-
-  var gallery = new PhotoSwipe(pswp, PhotoSwipeUI_Default, items, options);
-  gallery.init();
+  openPhotoSwipe($(e.currentTarget).data('index'));
 }
 
 function initGallery() {
   getItems();
+
+  // Bind click event to thumbnails
   $('.gallery').find('a').each(function() {
     $(this).on('click', onThumbnailClick);
   });
+
+  // Get params from url if user navigate directly
+  // to selected picture
+  var hashData = photoswipeParseHash();
+  if (hashData.gid && hashData.pid) {
+    openPhotoSwipe(hashData.pid - 1);
+  }
 }
 
 $(document).ready(initGallery);
