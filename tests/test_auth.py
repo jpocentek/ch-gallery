@@ -6,12 +6,12 @@ from chgallery.db.declarative import User
 
 class TestLoginForm:
     _login_url = '/auth/login'
-    _redirect_url = 'http://localhost/auth/'
+    _redirect_url = '/auth/'
 
     def test_login(self, client, auth):
         assert client.get(self._login_url).status_code == 200
         response = auth.login()
-        assert response.headers['location'] == self._redirect_url
+        assert response.headers['location'].endswith(self._redirect_url)
 
     def test_login_failed(self, client):
         assert client.get(self._login_url).status_code == 200
@@ -44,7 +44,7 @@ class TestRegisterForm:
             'password_repeat': 'otherpassword',
         }
         response = client.post(self._register_url, data=data)
-        assert response.headers['location'] == 'http://localhost/auth/login'
+        assert response.headers['location'].endswith('/auth/login')
         with app.app_context():
             db_session = get_db_session()
             # We'll get an error if user does not exist
@@ -75,11 +75,11 @@ def test_logout(client, auth):
     assert client.get('/auth/').status_code == 200
     auth.logout()
     response = client.get('/auth/')
-    assert 'http://localhost/auth/login' == response.headers['location']
+    assert response.headers['location'].endswith('/auth/login')
 
 
 def test_login_required_decorator(client, auth):
     response = client.get('/auth/')
-    assert 'http://localhost/auth/login' == response.headers['location']
+    assert response.headers['location'].endswith('/auth/login')
     auth.login()
     assert client.get('/auth/').status_code == 200

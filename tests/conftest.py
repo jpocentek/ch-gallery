@@ -19,6 +19,8 @@ def app():
         'TESTING': True,
         'DATABASE': db_path,
         'UPLOAD_PATH': upload_path,
+        # https://stackoverflow.com/questions/31766082/flask-url-for-error-attempted-to-generate-a-url-without-the-application-conte # noqa
+        'SERVER_NAME': 'localhost.localdomain',
         'WTF_CSRF_ENABLED': False,
     })
 
