@@ -1,4 +1,5 @@
 import os
+import shutil
 import tempfile
 
 import pytest
@@ -12,10 +13,12 @@ from chgallery.db.declarative import User
 @pytest.fixture
 def app():
     db_fd, db_path = tempfile.mkstemp()
+    upload_path = tempfile.mkdtemp('upload')
 
     app = create_app({
         'TESTING': True,
         'DATABASE': db_path,
+        'UPLOAD_PATH': upload_path,
         'WTF_CSRF_ENABLED': False,
     })
 
@@ -37,6 +40,7 @@ def app():
 
     os.close(db_fd)
     os.unlink(db_path)
+    shutil.rmtree(upload_path)
 
 
 @pytest.fixture

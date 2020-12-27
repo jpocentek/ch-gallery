@@ -14,6 +14,7 @@ function extractImageData($el) {
   return {
     src: $linkEl.attr('href'),
     msrc: $linkEl.find('img').first().attr('src'),
+    title: $linkEl.parent('figure').find('figcaption').text(),
     w: parseInt(size[0], 10),
     h: parseInt(size[1], 10)
   };

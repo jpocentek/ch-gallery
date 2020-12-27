@@ -52,6 +52,7 @@ def upload():
     if form.validate_on_submit():
         image = Image(
             name=get_unique_filename(form.image.data.filename),
+            description=form.description.data,
             author_id=g.user.id,
         )
 

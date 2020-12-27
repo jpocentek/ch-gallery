@@ -23,7 +23,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
 
     def __str__(self):
-        return self.username
+        return str(self.username)
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.username)
@@ -42,7 +42,7 @@ class Image(Base):
     author = relationship(User, backref=backref('images', uselist=True))
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.name)
