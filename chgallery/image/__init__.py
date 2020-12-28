@@ -82,7 +82,7 @@ def upload():
         img.thumbnail((100, 100))
         img.save(os.path.join(current_app.config['UPLOAD_PATH'], 'previews', image.name), img.format)
 
-        flash('Image uploaded successfully')
+        flash('Image uploaded successfully', 'success')
         return redirect(url_for('auth.dashboard'))
 
     return render_template('image/upload.html', form=form)
@@ -110,7 +110,7 @@ def delete(image_id):
     db_session.delete(obj)
     db_session.commit()
 
-    flash('Object removed')
+    flash('Object removed', 'info')
     return redirect(url_for('auth.dashboard'))
 
 

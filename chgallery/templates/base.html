@@ -40,7 +40,15 @@
       </div>
     </nav>
 
-    <main role="main" class="container">{% block content %}{% endblock %}</main>
+    <main role="main" class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<ul class=flashes>
+        {% for category, message in messages %}<li class="alert alert-{{ category }} alert-dismissible">{{ message }}</li>{% endfor %}
+      </ul>{% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
 
     {% block foot_scripts %}<script src="{{ url_for('static', filename='dist/main.js') }}"></script>{% endblock %}
   </body>
