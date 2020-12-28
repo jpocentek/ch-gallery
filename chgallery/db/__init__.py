@@ -1,5 +1,6 @@
-import click
+import re
 
+import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 from sqlalchemy import create_engine
@@ -9,30 +10,49 @@ from chgallery.db.declarative import Base
 
 
 def create_db_engine():
-    # SQLite engine
-    return create_engine('sqlite:///{}'.format(current_app.config['DATABASE']))
+    """
+    Creates new engine to be used by SQLAlchemy depending on database
+    configuration. Connection string is taken directly from application
+    configuration so it must be provided as required by SQLAlchemy.
 
-    # MySQL engine
-    # engine = create_engine('mysqlclient+mysql://dbuser:dbpass@localhost')
-    # engine.execute('USE dbname')
-    # return engine
+    Note that to use anything other than Sqlite you have to install
+    appropriate database driver by yourself. Check SQLAlchemy docs
+    for all information.
 
-    # PostgreSQL engine
-    # return create_engine('postgresql+psycopg2://dbuser:dbpass@localhost/dbname')
+    Note for MySQL users: In case of MySQL engine there is another
+    configuration option required: 'MYSQL_DB_NAME'. This should point
+    to the database that will be used by application.
 
+    Possible db settings:
 
-def create_db_session(engine):
-    DBSession = sessionmaker(bind=create_db_engine())
-    return DBSession()
+    * Sqlite:     'sqlite:///path_to_db.sqlite'
+    * MySQL:      'mysqlclient+mysql://dbuser:dbpass@localhost'
+    * PostgreSQL: 'postgresql+psycopg2://dbuser:dbpass@localhost/dbname'
+    """
+    db_string = current_app.config['DATABASE']
+    engine = create_engine(db_string)
+
+    if re.match(r'^[a-zA-Z]+\+(mysql)://', db_string):
+        # MySQL engine detected
+        engine.execute('USE {}'.format(current_app.config['MYSQL_DB_NAME']))
+
+    return engine
 
 
 def get_db_session():
+    """
+    Creates new DB session if it does not exist in scope of
+    current application. Otherwise returns existing session.
+    """
     if 'db_session' not in g:
-        g.db_session = create_db_session(create_db_engine())
+        g.db_session = sessionmaker(bind=create_db_engine())()
     return g.db_session
 
 
 def close_db(e=None):
+    """
+    Closess database session and removes all engine bindings.
+    """
     session = g.pop('db_session', None)
     if session is not None:
         session.close()
@@ -40,6 +60,11 @@ def close_db(e=None):
 
 
 def init_db():
+    """
+    Remove existing tables from database and create
+    new in initial state. This should be used after
+    every fresh installation.
+    """
     engine = create_db_engine()
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
