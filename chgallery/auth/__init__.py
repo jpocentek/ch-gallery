@@ -1,5 +1,7 @@
 from flask import (
         Blueprint,
+        abort,
+        current_app,
         g,
         redirect,
         render_template,
@@ -27,6 +29,9 @@ def dashboard():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    if current_app.config.get('REGISTRATION_DISABLED'):
+        abort(404)
+
     form = RegisterForm()
 
     if form.validate_on_submit():
