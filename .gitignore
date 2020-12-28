@@ -5,6 +5,7 @@
 .coverage
 
 *.egg-info/
+/htmlcov/
 /instance/
 /node_modules/
 chgallery/static/dist/

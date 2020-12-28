@@ -13,12 +13,12 @@ def create_db_engine():
     return create_engine('sqlite:///{}'.format(current_app.config['DATABASE']))
 
     # MySQL engine
-    # engine = create_engine('mysqlclient+mysql://chester:233mmx@127.0.0.1')
-    # engine.execute('USE chester')
+    # engine = create_engine('mysqlclient+mysql://dbuser:dbpass@localhost')
+    # engine.execute('USE dbname')
     # return engine
 
     # PostgreSQL engine
-    # return create_engine('postgresql+psycopg2://chester:233mmx@127.0.0.1/chester')
+    # return create_engine('postgresql+psycopg2://dbuser:dbpass@localhost/dbname')
 
 
 def create_db_session(engine):

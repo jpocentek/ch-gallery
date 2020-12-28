@@ -27,21 +27,30 @@ bp = Blueprint('image', __name__, url_prefix='/image')
 
 
 def get_unique_filename(filename):
+    """
+    Create unique filename using given name to ensure that
+    it's not already present in database. This method simply
+    adds a counter to original filename.
+
+    :param str filename:
+    :rtype str:
+    """
     filename = secure_filename(filename)
+    final_name = filename
     db_session = get_db_session()
     success = False
     retries = 0
 
     while not success:
         try:
-            db_session.query(Image).filter(Image.name == filename).one()
+            db_session.query(Image).filter(Image.name == final_name).one()
             retries += 1
             fname, ext = os.path.splitext(filename)
-            filename = '{}({}){}'.format(fname, retries, ext)
+            final_name = '{}({}){}'.format(fname, retries, ext)
         except NoResultFound:
             success = True
 
-    return filename
+    return final_name
 
 
 @bp.route('/upload', methods=('GET', 'POST'))
