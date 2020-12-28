@@ -37,6 +37,8 @@ class TestRegisterForm:
 
     def test_register_while_disabled(self, app, client):
         app.config['REGISTRATION_DISABLED'] = True
+        response = client.get('/')
+        assert b'Register' not in response.data
         assert client.get(self._register_url).status_code == 404
 
     def test_register(self, app, client):
