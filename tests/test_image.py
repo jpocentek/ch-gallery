@@ -94,14 +94,20 @@ class TestUploadImageClass:
             assert image.description == 'Test Image'
             assert image.url().endswith('/image/uploads/{}'.format(image.name))
             assert image.thumbnail_url().endswith('/image/uploads/thumbs/{}'.format(image.name))
+            assert image.preview_thumb_url().endswith('/image/uploads/previews/{}'.format(image.name))
             assert image.name in os.listdir(app.config['UPLOAD_PATH'])
             assert image.name in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
+            assert image.name in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
 
         response = client.get('/image/uploads/{}'.format(image.name))
         assert response.status_code == 200
         assert response.headers['content-type'] == 'image/jpeg'
 
         response = client.get('/image/uploads/thumbs/{}'.format(image.name))
+        assert response.status_code == 200
+        assert response.headers['content-type'] == 'image/jpeg'
+
+        response = client.get('/image/uploads/previews/{}'.format(image.name))
         assert response.status_code == 200
         assert response.headers['content-type'] == 'image/jpeg'
 
@@ -185,3 +191,4 @@ class TestDeleteImageClass:
 
         assert not 'test_picture.jpg' in os.listdir(app.config['UPLOAD_PATH'])
         assert not 'test_picture.jpg' in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
+        assert not 'test_picture.jpg' in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))

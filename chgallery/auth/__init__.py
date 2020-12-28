@@ -8,13 +8,14 @@ from flask import (
         session,
         url_for
 )
+from sqlalchemy import desc
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from chgallery.auth.decorators import login_required
 from chgallery.auth.forms import LoginForm, RegisterForm
 from chgallery.db import get_db_session
-from chgallery.db.declarative import User
+from chgallery.db.declarative import Image, User
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -23,8 +24,13 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/')
 @login_required
 def dashboard():
-    """ TODO """
-    return render_template('auth/dashboard.html')
+    images = (
+        g.db_session.query(Image)
+        .filter(Image.author == g.user)
+        .order_by(Image.creation_date.desc())
+    )
+
+    return render_template('auth/dashboard.html', images=images)
 
 
 @bp.route('/register', methods=('GET', 'POST'))

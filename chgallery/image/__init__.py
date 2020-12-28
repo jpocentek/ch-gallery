@@ -79,6 +79,8 @@ def upload():
         img.save(os.path.join(current_app.config['UPLOAD_PATH'], image.name), img.format)
         img.thumbnail((250, 250))
         img.save(os.path.join(current_app.config['UPLOAD_PATH'], 'thumbs', image.name), img.format)
+        img.thumbnail((100, 100))
+        img.save(os.path.join(current_app.config['UPLOAD_PATH'], 'previews', image.name), img.format)
 
         flash('Image uploaded successfully')
         return redirect(url_for('auth.dashboard'))
@@ -102,6 +104,7 @@ def delete(image_id):
     # Remove files associated with Image object instance
     os.unlink(os.path.join(current_app.config['UPLOAD_PATH'], obj.name))
     os.unlink(os.path.join(current_app.config['UPLOAD_PATH'], 'thumbs', obj.name))
+    os.unlink(os.path.join(current_app.config['UPLOAD_PATH'], 'previews', obj.name))
 
     # Remove Image instance from database
     db_session.delete(obj)
@@ -119,4 +122,10 @@ def uploaded_file(filename):
 @bp.route('/uploads/thumbs/<filename>')
 def uploaded_file_thumbnail(filename):
     path = os.path.join(current_app.config['UPLOAD_PATH'], 'thumbs')
+    return send_from_directory(path, filename)
+
+
+@bp.route('/uploads/previews/<filename>')
+def uploaded_file_preview(filename):
+    path = os.path.join(current_app.config['UPLOAD_PATH'], 'previews')
     return send_from_directory(path, filename)

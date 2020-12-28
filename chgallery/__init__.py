@@ -30,13 +30,14 @@ def create_app(test_config=None):
     # create directory for uploaded file if doesn't exist
     try:
         os.makedirs(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
+        os.makedirs(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
     except OSError:
         pass
 
     # basic view for non-registered users
     @app.route('/')
     def index():
-        images = get_db_session().query(Image).all()
+        images = get_db_session().query(Image).order_by(Image.id).all()
         return render_template('index.html', images=images)
 
     from chgallery.db import init_app

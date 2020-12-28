@@ -52,3 +52,6 @@ class Image(Base):
 
     def thumbnail_url(self):
         return url_for('image.uploaded_file_thumbnail', filename=self.name)
+
+    def preview_thumb_url(self):
+        return url_for('image.uploaded_file_preview', filename=self.name)

@@ -15,3 +15,15 @@ main {
     text-align: center;
   }
 }
+
+#dashboardImageTable {
+  td {
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+
+    .preview-image {
+      width: 100px;
+    }
+  }
+}
