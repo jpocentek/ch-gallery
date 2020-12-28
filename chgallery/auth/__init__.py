@@ -82,4 +82,4 @@ def load_logged_in_user():
         try:
             g.user = get_db_session().query(User).filter(User.id == user_id).one()
         except NoResultFound:
-            pass
+            session.clear()
