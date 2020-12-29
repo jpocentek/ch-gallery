@@ -14,7 +14,7 @@
     <td>{{ image.creation_date }}</td>
     <td>{{ image.description }}</td>
     <td class="text-center">
-      <form method="post" action="{{ url_for('image.delete', image_id=image.id) }}">
+      <form method="post" class="image-delete-form" action="{{ url_for('image.delete', image_id=image.id) }}">
         <button type="submit" class="close">
           <span class="text-danger" aria-hidden="true">&times;</span>
         </button>
@@ -22,4 +22,8 @@
     </td>
   </tr>{% endfor %}
 </table>{% endif %}
+{% endblock %}
+
+{% block foot_scripts %}
+  <script src="{{ url_for('static', filename='dist/dashboard.js') }}"></script>
 {% endblock %}

@@ -6,7 +6,8 @@ module.exports = {
 
   entry: {
     main: './src/js/main.js',
-    gallery: './src/js/gallery.js'
+    gallery: './src/js/gallery.js',
+    dashboard: './src/js/dashboard.js'
   },
 
   output: {

@@ -1,7 +1,4 @@
-import 'bootstrap';
 import $ from 'jquery';
-
-import '../sass/style.scss';
 
 const pswp = $('.pswp')[0];
 const items = [];
