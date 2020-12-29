@@ -8,7 +8,6 @@ from flask import (
         session,
         url_for
 )
-from sqlalchemy import desc
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash, generate_password_hash
 

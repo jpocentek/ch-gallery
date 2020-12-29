@@ -189,9 +189,9 @@ class TestDeleteImageClass:
             db_session = get_db_session()
             assert not db_session.query(Image).all()
 
-        assert not 'test_picture.jpg' in os.listdir(app.config['UPLOAD_PATH'])
-        assert not 'test_picture.jpg' in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
-        assert not 'test_picture.jpg' in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
+        assert 'test_picture.jpg' not in os.listdir(app.config['UPLOAD_PATH'])
+        assert 'test_picture.jpg' not in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
+        assert 'test_picture.jpg' not in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
 
 
 class TestDashboardClass:
