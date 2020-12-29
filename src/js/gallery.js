@@ -60,7 +60,9 @@ function photoswipeParseHash() {
 
 function openPhotoSwipe(index) {
   let options = { index: index };
+  /* eslint-disable no-undef */
   let gallery = new PhotoSwipe(pswp, PhotoSwipeUI_Default, items, options);
+  /* eslint-enable no-undef */
   gallery.init();
 }
 
