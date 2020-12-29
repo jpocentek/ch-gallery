@@ -4,7 +4,7 @@
 
 {% if images %}<table class="table" id="dashboardImageTable">
   {% for image in images %}<tr>
-    <td><img src="{{ image.preview_thumb_url() }}"></td>
+    <td><img src="{{ image.preview_url() }}"></td>
     <td><a href="{{ image.url() }}">{{ image.name }}</a></td>
     <td>{{ image.creation_date }}</td>
     <td>{{ image.description }}</td>

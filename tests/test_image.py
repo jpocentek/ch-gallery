@@ -94,7 +94,7 @@ class TestUploadImageClass:
             assert image.description == 'Test Image'
             assert image.url().endswith('/image/uploads/{}'.format(image.name))
             assert image.thumbnail_url().endswith('/image/uploads/thumbs/{}'.format(image.name))
-            assert image.preview_thumb_url().endswith('/image/uploads/previews/{}'.format(image.name))
+            assert image.preview_url().endswith('/image/uploads/previews/{}'.format(image.name))
             assert image.name in os.listdir(app.config['UPLOAD_PATH'])
             assert image.name in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
             assert image.name in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
@@ -192,3 +192,15 @@ class TestDeleteImageClass:
         assert not 'test_picture.jpg' in os.listdir(app.config['UPLOAD_PATH'])
         assert not 'test_picture.jpg' in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
         assert not 'test_picture.jpg' in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
+
+
+class TestDashboardClass:
+
+    def test_image_display_in_dashboard(self, app, auth, client, mock_jpg_file):
+        # Create test image
+        auth.login()
+        client.post('/image/upload', data={'image': mock_jpg_file})
+        # Enter dashboard page where an image should be displayed
+        response = client.get('/auth/')
+        assert response.status_code == 200
+        assert b'/image/uploads/previews/test_picture.jpg' in response.data

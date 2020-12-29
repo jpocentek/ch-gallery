@@ -3,12 +3,12 @@ import $ from 'jquery';
 
 import '../sass/style.scss';
 
-var pswp = $('.pswp')[0];
-var items = [];
+const pswp = $('.pswp')[0];
+const items = [];
 
 // Parse single 'a' element and get image information
 function extractImageData($el) {
-  var $linkEl = $el.find('a').first(),
+  let $linkEl = $el.find('a').first(),
     size = $linkEl.data('size').split('x');
 
   return {
@@ -30,8 +30,8 @@ function getItems() {
 // Parse GET parameters from url to open selected
 // image when user enters page.
 function photoswipeParseHash() {
-  var hash = window.location.hash.substring(1),
-    params = {},
+  const hash = window.location.hash.substring(1);
+  let params = {},
     vars;
 
   if (hash.length < 5) {
@@ -39,11 +39,11 @@ function photoswipeParseHash() {
   }
 
   vars = hash.split('&');
-  for (var i = 0; i < vars.length; i++) {
+  for (let i = 0; i < vars.length; i++) {
     if (!vars[i]) {
       continue;
     }
-    var pair = vars[i].split('=');
+    let pair = vars[i].split('=');
     if (pair.length < 2) {
       continue;
     }
@@ -62,8 +62,8 @@ function photoswipeParseHash() {
 }
 
 function openPhotoSwipe(index) {
-  var options = { index: index };
-  var gallery = new PhotoSwipe(pswp, PhotoSwipeUI_Default, items, options);
+  let options = { index: index };
+  let gallery = new PhotoSwipe(pswp, PhotoSwipeUI_Default, items, options);
   gallery.init();
 }
 
@@ -83,7 +83,7 @@ function initGallery() {
 
   // Get params from url if user navigate directly
   // to selected picture
-  var hashData = photoswipeParseHash();
+  const hashData = photoswipeParseHash();
   if (hashData.gid && hashData.pid) {
     openPhotoSwipe(hashData.pid - 1);
   }

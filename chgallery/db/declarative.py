@@ -48,10 +48,19 @@ class Image(Base):
         return "<{0}: {1}>".format(self.__class__.__name__, self.name)
 
     def url(self):
+        """ Returns URL to full sized image file """
         return url_for('image.uploaded_file', filename=self.name)
 
     def thumbnail_url(self):
+        """
+        Returns URL of thumbnail image (max size 250px)
+        used for main gallery page.
+        """
         return url_for('image.uploaded_file_thumbnail', filename=self.name)
 
-    def preview_thumb_url(self):
+    def preview_url(self):
+        """
+        Returns URL of the smallest picture (max size 100px)
+        used as preview on administration pages.
+        """
         return url_for('image.uploaded_file_preview', filename=self.name)

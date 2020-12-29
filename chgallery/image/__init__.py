@@ -114,18 +114,23 @@ def delete(image_id):
     return redirect(url_for('auth.dashboard'))
 
 
+def display_uploaded_file(filename, dirname=None):
+    path = current_app.config['UPLOAD_PATH']
+    if dirname is not None:
+        path = os.path.join(path, dirname)
+    return send_from_directory(path, filename)
+
+
 @bp.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(current_app.config['UPLOAD_PATH'], filename)
+    return display_uploaded_file(filename)
 
 
 @bp.route('/uploads/thumbs/<filename>')
 def uploaded_file_thumbnail(filename):
-    path = os.path.join(current_app.config['UPLOAD_PATH'], 'thumbs')
-    return send_from_directory(path, filename)
+    return display_uploaded_file(filename, 'thumbs')
 
 
 @bp.route('/uploads/previews/<filename>')
 def uploaded_file_preview(filename):
-    path = os.path.join(current_app.config['UPLOAD_PATH'], 'previews')
-    return send_from_directory(path, filename)
+    return display_uploaded_file(filename, 'previews')
