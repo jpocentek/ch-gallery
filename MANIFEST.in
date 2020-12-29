@@ -1,0 +1,4 @@
+graft chgallery/templates
+graft chgallery/static
+graft tests/assets
+global-exclude *.pyc
