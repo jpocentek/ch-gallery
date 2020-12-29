@@ -1,5 +1,6 @@
 // https://github.com/dimsemenov/PhotoSwipe/issues/1374
 $pswp__assets-path: "~photoswipe/src/css/default-skin/";
+$preview-image-size: 100px;
 
 @import "_variables";
 @import "~bootstrap/scss/bootstrap";
@@ -7,27 +8,20 @@ $pswp__assets-path: "~photoswipe/src/css/default-skin/";
 @import "~photoswipe/src/css/default-skin/default-skin";
 
 main {
-  padding-top: 75px;
+  padding-top: 85px;
 }
 
 .flashes {
   list-style-type: none;
 }
 
-.gallery {
-  figure {
-    text-align: center;
-  }
-}
-
 #dashboardImageTable {
   td {
-    height: 100px;
-    line-height: 100px;
-    text-align: center;
+    height: $preview-image-size;
+    line-height: $preview-image-size;
 
     .preview-image {
-      width: 100px;
+      width: $preview-image-size;
     }
   }
 }
