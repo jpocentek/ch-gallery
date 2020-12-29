@@ -8,6 +8,7 @@
 /htmlcov/
 /instance/
 /node_modules/
+/docs/build/
 chgallery/static/dist/
 __pycache__/
 

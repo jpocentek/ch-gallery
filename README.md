@@ -38,7 +38,7 @@ npm install
 
 ## Assets
 
-To build static assets you have to install all packages from `package.json` and run
+To build static assets you have to install all packages with `npm install` and run
 ```
 npm run build
 ```
