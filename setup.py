@@ -7,7 +7,7 @@ setup(
     name='chgallery',
     version='0.0.1',
     author='Jakub Pocentek',
-    author_email='jpocentek@gmail.com',
+    author_email='pocedev@yandex.com',
     description='A simple image gallery',
     long_description=long_description,
     long_description_content_type='text/markdown',
