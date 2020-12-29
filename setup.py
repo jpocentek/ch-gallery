@@ -28,6 +28,5 @@ setup(
         'flask-wtf>=0.14.3',
         'email-validator>=1.1.2',
         'pillow>=8.0.1',
-        'pytz>=2020.5',
     ],
 )
