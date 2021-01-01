@@ -18,4 +18,4 @@ class ImageFileRequired(FileRequired):
 
 class UploadForm(FlaskForm):
     image = FileField('image', validators=[ImageFileRequired()])
-    description = StringField('description', validators=[Length(min=0, max=255)])
+    description = StringField('description', validators=[Length(min=0, max=128)])

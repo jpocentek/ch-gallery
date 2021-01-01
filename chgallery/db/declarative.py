@@ -18,9 +18,9 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True, nullable=False, index=True)
-    password = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
+    username = Column(String(32), unique=True, nullable=False, index=True)
+    password = Column(String(255), nullable=False)
+    email = Column(String(64), unique=True, nullable=False)
 
     def __str__(self):
         return str(self.username)
@@ -33,8 +33,8 @@ class Image(Base):
     __tablename__ = 'image'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False, index=True)
-    description = Column(String, nullable=False, default="")
+    name = Column(String(255), unique=True, nullable=False, index=True)
+    description = Column(String(128), nullable=False, default="")
     creation_date = Column(DateTime, server_default=func.now())
     width = Column(Integer, nullable=False)
     height = Column(Integer, nullable=False)

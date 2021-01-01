@@ -1,5 +1,3 @@
-import re
-
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
@@ -19,24 +17,13 @@ def create_db_engine():
     appropriate database driver by yourself. Check SQLAlchemy docs
     for all information.
 
-    Note for MySQL users: In case of MySQL engine there is another
-    configuration option required: 'MYSQL_DB_NAME'. This should point
-    to the database that will be used by application.
-
     Possible db settings:
 
     * Sqlite:     'sqlite:///path_to_db.sqlite'
-    * MySQL:      'mysqlclient+mysql://dbuser:dbpass@localhost'
+    * MySQL:      'mysql+mysqlconnector://chester:233mmx@localhost/chester'
     * PostgreSQL: 'postgresql+psycopg2://dbuser:dbpass@localhost/dbname'
     """
-    db_string = current_app.config['DATABASE']
-    engine = create_engine(db_string)
-
-    if re.match(r'^[a-zA-Z]+\+(mysql)://', db_string):
-        # MySQL engine detected
-        engine.execute('USE {}'.format(current_app.config['MYSQL_DB_NAME']))
-
-    return engine
+    return create_engine(current_app.config['DATABASE'])
 
 
 def get_db_session():

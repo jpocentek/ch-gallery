@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, ValidationError
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 from chgallery.db import get_db_session
 from chgallery.db.declarative import User
@@ -12,9 +12,9 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    username = StringField('username', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired(), Email()])
-    password = PasswordField('password', validators=[DataRequired()])
+    username = StringField('username', validators=[DataRequired(), Length(min=4, max=32)])
+    email = StringField('email', validators=[DataRequired(), Email(), Length(min=0, max=64)])
+    password = PasswordField('password', validators=[DataRequired(), Length(min=1, max=64)])
     password_repeat = PasswordField('repeat password', validators=[EqualTo('password')])
 
     def validate_username(self, field):
