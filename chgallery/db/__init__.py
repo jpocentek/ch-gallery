@@ -62,6 +62,9 @@ def init_db():
 @with_appcontext
 def init_db_command():
     """ Clear the existing data and create new tables """
+    # FIXME: Not working in MySQL because of relationships between tables.
+    # Initial migration works fine but if there are already tables in db,
+    # the command will fail.
     init_db()
     click.echo('Initialized the database')
 
