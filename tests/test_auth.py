@@ -61,6 +61,7 @@ class TestRegisterForm:
         ('otheruser', 'otheruser@example.com', 'somepassword', '', b'Field must be equal to password'),
         ('test', 'otheruser@example.com', 'somepassword', '', b'User test already exists'),
         ('otheruser', 'test@example.com', 'somepassword', '', b'Email already taken'),
+        ('other user', 'test@example.com', 'somepassword', '', b'Invalid username'),
     ))
     def test_register_failed(self, client, username, email, password, password_repeat, message):
         data = {

@@ -1,3 +1,5 @@
+import re
+
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
@@ -21,6 +23,8 @@ class RegisterForm(FlaskForm):
         session = get_db_session()
         if session.query(User).filter(User.username == field.data).scalar() is not None:
             raise ValidationError('User {} already exists'.format(field.data))
+        if not re.match(r'^[\w\d\-_#]+$', field.data):
+            raise ValidationError('Invalid username')
 
     def validate_email(self, field):
         session = get_db_session()
