@@ -4,7 +4,8 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Integer,
-    String
+    String,
+    Table
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -29,6 +30,15 @@ class User(Base):
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.username)
+
+
+# Provide M2M relationship between Album and Image instances.
+album_association_table = Table(
+    'album_association',
+    Base.metadata,
+    Column('album_id', Integer, ForeignKey('album.id')),
+    Column('image_id', Integer, ForeignKey('image.id')),
+)
 
 
 class Image(Base):
@@ -77,6 +87,7 @@ class Album(Base):
     author_id = Column(Integer, ForeignKey('user.id'))
     cover_image_id = Column(Integer, ForeignKey('image.id'), nullable=True)
     cover_image = relationship(Image, backref='cover_image')
+    images = relationship(Image, backref='album', secondary=album_association_table)
 
     def __str__(self):
         return str(self.name)
