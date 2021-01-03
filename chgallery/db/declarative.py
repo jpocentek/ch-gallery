@@ -22,6 +22,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
     email = Column(String(64), unique=True, nullable=False)
     images = relationship('Image', backref='author', cascade='all, delete')
+    albums = relationship('Album', backref='author', cascade='all, delete')
 
     def __str__(self):
         return str(self.username)
@@ -64,3 +65,21 @@ class Image(Base):
         used as preview on administration pages.
         """
         return url_for('image.uploaded_file_preview', filename=self.name)
+
+
+class Album(Base):
+    __tablename__ = 'album'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(32), nullable=False, index=True)
+    description = Column(String(255), nullable=False, default="")
+    creation_date = Column(DateTime, server_default=func.now())
+    author_id = Column(Integer, ForeignKey('user.id'))
+    cover_image_id = Column(Integer, ForeignKey('image.id'), nullable=True)
+    cover_image = relationship(Image, backref='cover_image')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __repr__(self):
+        return "<{0}: {1}>".format(self.__class__.__name__, self.name)
