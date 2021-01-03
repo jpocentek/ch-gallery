@@ -20,7 +20,7 @@ def create_db_engine():
     Possible db settings:
 
     * Sqlite:     'sqlite:///path_to_db.sqlite'
-    * MySQL:      'mysql+mysqlconnector://chester:233mmx@localhost/chester'
+    * MySQL:      'mysql+mysqlconnector://dbuser:dbpass@localhost/dbname'
     * PostgreSQL: 'postgresql+psycopg2://dbuser:dbpass@localhost/dbname'
     """
     return create_engine(current_app.config['DATABASE'])
