@@ -37,6 +37,10 @@ def register():
     if current_app.config.get('REGISTRATION_DISABLED'):
         abort(404)
 
+    # Redirect user directly to dashboard if already authorized
+    if g.user:
+        return redirect(url_for('auth.dashboard'))
+
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -56,6 +60,11 @@ def register():
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+
+    # Redirect user directly to dashboard if already authorized
+    if g.user:
+        return redirect(url_for('auth.dashboard'))
+
     form = LoginForm()
     error = None
 

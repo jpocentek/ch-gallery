@@ -22,14 +22,11 @@ class TestLoginForm:
         response = client.post(self._login_url, data=data)
         assert b'Invalid login credentials' in response.data
 
-    # TODO: better authentication mechanism. For now it's risky
-    # to determine in login view if user is already authenticated.
-    #
-    # Status: Failing
-    # def test_redirect_logged_user(self, client, auth):
-    #     auth.login()
-    #     response = client.get(self._login_url)
-    #     assert response.headers['location'] == self._redirect_url
+    def test_redirect_logged_user(self, client, auth):
+        auth.login()
+        response = client.get(self._login_url)
+        assert response.status_code == 302
+        assert response.headers['location'].endswith(self._redirect_url)
 
 
 class TestRegisterForm:
@@ -74,6 +71,12 @@ class TestRegisterForm:
         }
         response = client.post(self._register_url, data=data)
         assert message in response.data
+
+    def test_redirect_logged_user_from_register_screen(self, auth, client):
+        auth.login()
+        response = client.get('/auth/register')
+        assert response.status_code == 302
+        assert response.headers['location'].endswith('/auth/')
 
 
 def test_logout(client, auth):
