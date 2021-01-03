@@ -193,6 +193,36 @@ class TestDeleteImageClass:
         assert 'test_picture.jpg' not in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
         assert 'test_picture.jpg' not in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
 
+    def test_that_images_are_deleted_along_with_author(self, app, auth, client, mock_jpg_file):
+        other_user = User(
+            username='otheruser',
+            email='otheruser@example.com',
+            password=generate_password_hash('somepassword'),
+        )
+
+        with app.app_context():
+            db_session = get_db_session()
+
+        db_session.add(other_user)
+        db_session.commit()
+
+        data = {
+            'image': mock_jpg_file,
+            'description': 'Test Image',
+        }
+
+        auth.login(username='otheruser', password='somepassword')
+        client.post('/image/upload', data=data, content_type='multipart/form-data')
+
+        # Ensure that image was actually uploaded
+        q = db_session.query(Image).filter(Image.author_id == 2)
+        assert q.count() == 1
+
+        # Delete Other User and ensure his images are deleted as well
+        db_session.delete(other_user)
+        db_session.commit()
+        assert q.count() == 0
+
 
 class TestDashboardClass:
 
