@@ -215,13 +215,12 @@ class TestDeleteImageClass:
         client.post('/image/upload', data=data, content_type='multipart/form-data')
 
         # Ensure that image was actually uploaded
-        q = db_session.query(Image).filter(Image.author_id == 2)
-        assert q.count() == 1
+        assert db_session.query(Image).count() == 1
 
         # Delete Other User and ensure his images are deleted as well
         db_session.delete(other_user)
         db_session.commit()
-        assert q.count() == 0
+        assert db_session.query(Image).count() == 0
 
 
 class TestDashboardClass:

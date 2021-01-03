@@ -7,7 +7,7 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 
@@ -21,6 +21,7 @@ class User(Base):
     username = Column(String(32), unique=True, nullable=False, index=True)
     password = Column(String(255), nullable=False)
     email = Column(String(64), unique=True, nullable=False)
+    images = relationship('Image', backref='author', cascade='all, delete')
 
     def __str__(self):
         return str(self.username)
@@ -39,7 +40,6 @@ class Image(Base):
     width = Column(Integer, nullable=False)
     height = Column(Integer, nullable=False)
     author_id = Column(Integer, ForeignKey('user.id'))
-    author = relationship(User, backref=backref('images', uselist=True))
 
     def __str__(self):
         return str(self.name)
