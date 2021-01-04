@@ -5,13 +5,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
 
   entry: {
-    main: './src/js/main.js',
-    gallery: './src/js/gallery.js',
-    dashboard: './src/js/dashboard.js'
+    main: './assets/src/js/main.js',
+    gallery: './assets/src/js/gallery.js',
+    dashboard: './assets/src/js/dashboard.js'
   },
 
   output: {
-    path: path.resolve(__dirname, 'chgallery/static/dist'),
+    path: path.resolve(__dirname, '../chgallery/static/dist'),
     filename: '[name].js',
 
     // See: https://stackoverflow.com/questions/64294706/webpack5-automatic-publicpath-is-not-supported-in-this-browser
