@@ -18,4 +18,4 @@ for backend. Gallery page is made to be used with [PhotoSwipe](https://github.co
 This repository uses Pillow for image manipulation so be sure to follow instructions for Pillow installation for your OS.
 For now it has been tested only on Linux (Debian 9 and 10).
 
-Search docs for more information about installation and configuration.
+Search [docs](https://dev.krastaman.tk/docs/ch-gallery/) for more information about installation and configuration.
