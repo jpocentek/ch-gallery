@@ -59,7 +59,7 @@ class TestAlbumCreateClass:
         with app.app_context():
             db_session = get_db_session()
 
-        instance = db_session.query(Album).filter(Album.author_id == 1).first()
+        instance = db_session.query(Album).filter(Album.author_id == 1).one()
         assert instance.name == "Test Album 1"
         assert instance.description == "Test Album Description"
 

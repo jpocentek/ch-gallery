@@ -12,6 +12,8 @@ from chgallery.auth.decorators import login_required
 from chgallery.db import get_db_session
 from chgallery.db.declarative import Album
 
+from .forms import AlbumForm
+
 bp = Blueprint('album', __name__, url_prefix='/album')
 
 
@@ -31,6 +33,20 @@ def album_list():
     return render_template('album/index.html', albums=albums)
 
 
+@bp.route('/create', methods=('GET', 'POST'))
+@login_required
+def album_create():
+    form = AlbumForm()
+
+    if form.validate_on_submit():
+        form.instance.author = g.user
+        form.save()
+        flash('New album created', 'success')
+        return redirect(url_for('album.album_list'))
+
+    return render_template('album/album_form.html', form=form)
+
+
 @bp.route('/<int:album_id>/delete', methods=('POST',))
 @login_required
 def album_delete(album_id):
@@ -38,15 +54,15 @@ def album_delete(album_id):
     db_session = get_db_session()
 
     try:
-        instance = db_session.query(Album).filter(Album.id == album_id).one()
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
     except NoResultFound:
         abort(404)
 
-    if instance.author != g.user:
+    if obj.author_id != g.user.id:
         abort(403)
 
-    db_session.delete(instance)
+    db_session.delete(obj)
     db_session.commit()
-    flash('Album deleted', 'danger')
 
+    flash('Album deleted', 'danger')
     return redirect(url_for('album.album_list'))
