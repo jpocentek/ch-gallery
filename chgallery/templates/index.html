@@ -5,8 +5,8 @@
   <div class="row">
     {% for image in images %}
     <figure class="col-sm-4 text-center" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-      <a href="{{ image.url() }}" itemprop="contentUrl" data-size="{{ image.width }}x{{ image.height }}" data-index="{{ loop.index0 }}">
-        <img src="{{ image.thumbnail_url() }}" itemprop="thumbnail" alt="Image description">
+      <a href="{{ image.url }}" itemprop="contentUrl" data-size="{{ image.width }}x{{ image.height }}" data-index="{{ loop.index0 }}">
+        <img src="{{ image.thumbnail_url }}" itemprop="thumbnail" alt="Image description">
       </a>
       <figcaption itemprop="caption description">{{ image.description }}</figcaption>
     </figure>

@@ -9,8 +9,8 @@
     <th>Options</th>
   </tr>
   {% for image in images %}<tr>
-    <td class="image-preview text-center"><img src="{{ image.preview_url() }}"></td>
-    <td><a href="{{ image.url() }}">{{ image.name }}</a></td>
+    <td class="image-preview text-center"><img src="{{ image.preview_url }}"></td>
+    <td><a href="{{ image.url }}">{{ image.name }}</a></td>
     <td>{{ image.creation_date }}</td>
     <td>{{ image.description }}</td>
     <td class="text-center">

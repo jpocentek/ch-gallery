@@ -58,10 +58,12 @@ class Image(Base):
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.name)
 
+    @property
     def url(self):
         """ Returns URL to full sized image file """
         return url_for('image.uploaded_file', filename=self.name)
 
+    @property
     def thumbnail_url(self):
         """
         Returns URL of thumbnail image (max size 250px)
@@ -69,6 +71,7 @@ class Image(Base):
         """
         return url_for('image.uploaded_file_thumbnail', filename=self.name)
 
+    @property
     def preview_url(self):
         """
         Returns URL of the smallest picture (max size 100px)

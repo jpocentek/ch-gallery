@@ -92,9 +92,9 @@ class TestUploadImageClass:
             db_session.close()
 
             assert image.description == 'Test Image'
-            assert image.url().endswith('/image/uploads/{}'.format(image.name))
-            assert image.thumbnail_url().endswith('/image/uploads/thumbs/{}'.format(image.name))
-            assert image.preview_url().endswith('/image/uploads/previews/{}'.format(image.name))
+            assert image.url.endswith('/image/uploads/{}'.format(image.name))
+            assert image.thumbnail_url.endswith('/image/uploads/thumbs/{}'.format(image.name))
+            assert image.preview_url.endswith('/image/uploads/previews/{}'.format(image.name))
             assert image.name in os.listdir(app.config['UPLOAD_PATH'])
             assert image.name in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'thumbs'))
             assert image.name in os.listdir(os.path.join(app.config['UPLOAD_PATH'], 'previews'))

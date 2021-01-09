@@ -49,4 +49,7 @@ def create_app(test_config=None):
     from chgallery import image
     app.register_blueprint(image.bp)
 
+    from chgallery import album
+    app.register_blueprint(album.bp)
+
     return app
