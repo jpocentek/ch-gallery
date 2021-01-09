@@ -36,12 +36,37 @@ def album_list():
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def album_create():
+    """ Create new album owned by currently authorized user """
     form = AlbumForm()
 
     if form.validate_on_submit():
         form.instance.author = g.user
         form.save()
         flash('New album created', 'success')
+        return redirect(url_for('album.album_list'))
+
+    return render_template('album/album_form.html', form=form)
+
+
+@bp.route('/<int:album_id>/update', methods=('GET', 'POST'))
+@login_required
+def album_update(album_id):
+    """ Update selected album if authorized user is album's owner """
+    db_session = get_db_session()
+
+    try:
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+    except NoResultFound:
+        abort(404)
+
+    if obj.author_id != g.user.id:
+        abort(403)
+
+    form = AlbumForm(instance=obj)
+
+    if form.validate_on_submit():
+        form.save()
+        flash('Album updated', 'success')
         return redirect(url_for('album.album_list'))
 
     return render_template('album/album_form.html', form=form)

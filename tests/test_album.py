@@ -8,6 +8,7 @@ from chgallery.db.declarative import Album
 __URLCONFIG__ = {
     'album_list': '/album/',
     'album_create': '/album/create',
+    'album_update': '/album/{album_id}/update',
     'album_delete': '/album/{album_id}/delete',
     'login_redirect': '/auth/login',
 }
@@ -62,6 +63,46 @@ class TestAlbumCreateClass:
         instance = db_session.query(Album).filter(Album.author_id == 1).one()
         assert instance.name == "Test Album 1"
         assert instance.description == "Test Album Description"
+
+
+class TestAlbumUpdateClass:
+
+    def test_update_returns_404_if_object_does_not_exist(self, app, auth, client):
+        auth.login()
+        url = __URLCONFIG__['album_update'].format(album_id=1)
+        assert client.post(url).status_code == 404
+
+    def test_unauthorized_user_cannot_access_update_view(self, client):
+        response = client.post(__URLCONFIG__['album_update'].format(album_id=1))
+        assert response.status_code == 302
+        assert response.headers['location'].endswith(__URLCONFIG__['login_redirect'])
+
+    def test_only_owner_can_update_album(self, auth, client, load_fake_data):
+        auth.login('otheruser', 'otherpass')
+        response = client.post(__URLCONFIG__['album_update'].format(album_id=1))
+        assert response.status_code == 403
+
+    def test_that_field_values_are_filled_from_model_fields(self, auth, client, load_fake_data):
+        auth.login()
+        response = client.get(__URLCONFIG__['album_update'].format(album_id=1))
+        assert response.status_code == 200
+        assert b'value="Album 1"' in response.data
+        assert b'value="This is for testing only"' in response.data
+
+    def test_successful_album_update(self, app, auth, client, load_fake_data):
+        auth.login()
+
+        data = {'name': 'Updated Name', 'description': 'Updated description'}
+        response = client.post(__URLCONFIG__['album_update'].format(album_id=1), data=data)
+        assert response.status_code == 302
+        assert response.headers['location'].endswith(__URLCONFIG__['album_list'])
+
+        with app.app_context():
+            db_session = get_db_session()
+
+        obj = db_session.query(Album).filter(Album.id == 1).one()
+        assert obj.name == 'Updated Name'
+        assert obj.description == 'Updated description'
 
 
 class TestAlbumDeleteClass:
