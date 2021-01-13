@@ -11,7 +11,7 @@ setup(
     description='A simple image gallery',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/jpocentek/ch-gallery',
+    url='https://dev.krastaman.tk/docs/ch-gallery',
     license_file='LICENSE.txt',
     packages=find_packages(),
     include_package_data=True,

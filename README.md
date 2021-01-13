@@ -1,11 +1,12 @@
 # CH Gallery
 
 ![License: MIT](https://img.shields.io/github/license/commonality/readme-inspector.svg)
-![Python Versions](https://img.shields.io/badge/Python-3-blue)
-![Linux Build](https://img.shields.io/badge/Linux%20Build-passed-brightgreen)
+![Python versions](https://img.shields.io/badge/Python-3-blue)
+![Linux build](https://img.shields.io/badge/linux%20build-passing-brightgreen)
+![Windows build](https://img.shields.io/badge/windows%20build-unknown-lightgrey)
 
 Simple gallery application using [Flask](https://github.com/pallets/flask) and [SQLAlchemy](https://www.sqlalchemy.org/)
-for backend. Gallery page is made to be used with [PhotoSwipe](https://github.com/jpocentek/PhotoSwipe/) script.
+for backend. Gallery page is made to be used with [PhotoSwipe](https://github.com/dimsemenov/PhotoSwipe) script.
 
 **Note** that this is still work in progress and it's not ready for production yet!
 
