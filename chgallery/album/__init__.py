@@ -1,3 +1,6 @@
+"""
+TODO: Merge 'album_images_add' and 'album_images_update' views.
+"""
 from flask import (
     Blueprint,
     abort,
@@ -16,6 +19,30 @@ from chgallery.db.declarative import Album
 from .forms import AlbumForm
 
 bp = Blueprint('album', __name__, url_prefix='/album')
+
+
+def get_album_instance(album_id):
+    """
+    Raises 404 response if instance with given ID could not be
+    found in database or 403 if user is not an instance owner.
+    Otherwise returns Album object instance.
+
+    :param int: album_id Selected album instance ID
+
+    :returns: Album object instance
+    :rtype: chgallery.db.declarative.Album
+    """
+    db_session = get_db_session()
+
+    try:
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+    except NoResultFound:
+        abort(404)
+
+    if obj.author_id != g.user.id:
+        abort(403)
+
+    return obj
 
 
 @bp.route('/', methods=('GET',))
@@ -53,16 +80,7 @@ def album_create():
 @login_required
 def album_update(album_id):
     """ Update selected album if authorized user is album's owner """
-    db_session = get_db_session()
-
-    try:
-        obj = db_session.query(Album).filter(Album.id == album_id).one()
-    except NoResultFound:
-        abort(404)
-
-    if obj.author_id != g.user.id:
-        abort(403)
-
+    obj = get_album_instance(album_id)
     form = AlbumForm(instance=obj)
 
     if form.validate_on_submit():
@@ -77,16 +95,9 @@ def album_update(album_id):
 @login_required
 def album_delete(album_id):
     """ Delete selected album if authorized user is album's owner """
+    obj = get_album_instance(album_id)
+
     db_session = get_db_session()
-
-    try:
-        obj = db_session.query(Album).filter(Album.id == album_id).one()
-    except NoResultFound:
-        abort(404)
-
-    if obj.author_id != g.user.id:
-        abort(403)
-
     db_session.delete(obj)
     db_session.commit()
 
@@ -102,15 +113,7 @@ def album_images_add(album_id):
     to add single selected image on image list view but it actually
     accepts list of ID's of images to be added to album.
     """
-    db_session = get_db_session()
-
-    try:
-        obj = db_session.query(Album).filter(Album.id == album_id).one()
-    except NoResultFound:
-        abort(404)
-
-    if obj.author_id != g.user.id:
-        abort(403)
+    obj = get_album_instance(album_id)
 
     try:
         id_list = [int(x) for x in request.form.getlist('images')]
@@ -121,9 +124,10 @@ def album_images_add(album_id):
         abort(400)
 
     obj.images += [x for x in g.user.images if x.id in id_list]
+    db_session = get_db_session()
     db_session.commit()
 
-    flash('Images added succesfully', 'success')
+    flash('Album updated', 'success')
     return redirect(url_for('image.index'))
 
 
@@ -135,4 +139,22 @@ def album_images_update(album_id):
     in selected album and allows to modify this list and save entirely
     new image list for selected album.
     """
-    raise NotImplementedError
+    obj = get_album_instance(album_id)
+
+    if request.method == 'POST':
+        try:
+            id_list = [int(x) for x in request.form.getlist('images')]
+        except (TypeError, ValueError):
+            # Form is not intended to be used directly by site user so
+            # it's most likely that malformed data comes from some
+            # unusual activity. So we do not bother to display exact errors.
+            abort(400)
+
+        obj.images = [x for x in g.user.images if x.id in id_list]
+        db_session = get_db_session()
+        db_session.commit()
+
+        flash('Album updated', 'success')
+        return redirect(url_for('image.index'))
+    else:
+        return render_template('album/image_update.html', obj=obj, images=g.user.images)

@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy.orm.exc import NoResultFound
 
 from chgallery.db import get_db_session
-from chgallery.db.declarative import Album
+from chgallery.db.declarative import Album, Image
 
 
 __URLCONFIG__ = {
@@ -153,26 +153,10 @@ class TestAddImagesToAlbumClass:
         url = __URLCONFIG__['album_add_images'].format(album_id=1)
         assert client.post(url).status_code == 404
 
-    def test_add_images_returns_404_if_image_does_not_exist(self, auth, client, load_fake_data):
-        auth.login()
-        url = __URLCONFIG__['album_add_images'].format(album_id=1)
-        data = {'images': [9999]}  # Ensure that image ID does not exist
-        assert client.post(url, data=data).status_code == 404
-
     def test_only_album_owner_can_add_images(self, auth, client, load_fake_data):
         auth.login()
         url = __URLCONFIG__['album_add_images'].format(album_id=2)
         assert client.post(url).status_code == 403
-
-    def test_only_image_owner_can_add_images(self, auth, client, load_fake_data):
-        auth.login()
-        url = __URLCONFIG__['album_add_images'].format(album_id=1)
-        data = {'images': [2]}  # Image does not belong to authorized user
-
-        # Here we'll return 404 response as we want to only select images belonging to
-        # authorized user. It's obvious that selected id/author_id combination does
-        # not exist if user is not an image owner.
-        assert client.post(url, data=data).status_code == 404
 
     def test_image_successfully_added_with_image_add_view(self, app, auth, client, load_fake_data):
         auth.login()
@@ -186,6 +170,89 @@ class TestAddImagesToAlbumClass:
         response = client.post(url, data=data)
         assert response.status_code == 302
         assert response.headers['location'].endswith(__URLCONFIG__['image_list'])
+
+        with app.app_context():
+            db_session = get_db_session()
+
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+        assert image_id in [x.id for x in obj.images]
+
+
+class TestAlbumImagesUpdateClass:
+
+    def test_that_anonymous_user_cannot_access_album_update(self, client, load_fake_data):
+        url = __URLCONFIG__['album_update_images'].format(album_id=1)
+
+        response = client.get(url)
+        assert response.status_code == 302
+        assert response.headers['location'].endswith(__URLCONFIG__['login_redirect'])
+
+        response = client.post(url)
+        assert response.status_code == 302
+        assert response.headers['location'].endswith(__URLCONFIG__['login_redirect'])
+
+    def test_that_album_update_returns_404_if_object_does_not_exist(self, auth, client):
+        auth.login()
+        url = __URLCONFIG__['album_update_images'].format(album_id=1)
+
+        assert client.get(url).status_code == 404
+        assert client.post(url).status_code == 404
+
+    def test_that_only_users_own_images_are_displayed_in_form(self, auth, client, load_fake_data):
+        auth.login()
+        url = __URLCONFIG__['album_update_images'].format(album_id=1)
+
+        response = client.get(url)
+        assert b'value="1"' in response.data
+        assert b'value="2"' not in response.data
+
+    def test_that_images_in_album_are_already_selected(self, app, auth, client, load_fake_data):
+        album_id = 1
+        image_id = 1
+        url = __URLCONFIG__['album_update_images'].format(album_id=album_id)
+
+        auth.login()
+
+        with app.app_context():
+            db_session = get_db_session()
+
+        # Add single image to album
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+        img_obj = db_session.query(Image).filter(Image.id == image_id).one()
+        obj.images = [img_obj]
+        db_session.commit()
+
+        response = client.get(url)
+        assert b'value="1" checked="checked"' in response.data
+
+    def test_that_only_owner_can_access_album_update_images_view(self, auth, client, load_fake_data):
+        auth.login()
+        url = __URLCONFIG__['album_update_images'].format(album_id=2)
+
+        assert client.get(url).status_code == 403
+        assert client.post(url).status_code == 403
+
+    def test_that_only_owners_images_can_be_added_to_album(self, app, auth, client, load_fake_data):
+        album_id = 1
+        image_id = 2
+        url = __URLCONFIG__['album_update_images'].format(album_id=album_id)
+
+        auth.login()
+        client.post(url, data={'images': [image_id]})
+
+        with app.app_context():
+            db_session = get_db_session()
+
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+        assert image_id not in [x.id for x in obj.images]
+
+    def test_successful_album_update_with_image_update_form(self, app, auth, client, load_fake_data):
+        album_id = 1
+        image_id = 1
+        url = __URLCONFIG__['album_update_images'].format(album_id=album_id)
+
+        auth.login()
+        client.post(url, data={'images': [image_id]})
 
         with app.app_context():
             db_session = get_db_session()
