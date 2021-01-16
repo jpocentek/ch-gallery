@@ -91,3 +91,35 @@ def album_delete(album_id):
 
     flash('Album deleted', 'danger')
     return redirect(url_for('album.album_list'))
+
+
+@bp.route('/<int:album_id>/images/add', methods=('POST',))
+@login_required
+def album_images_add(album_id):
+    """
+    Add images to selected album. This view will usually be used
+    to add single selected image on image list view but it actually
+    accepts list of ID's of images to be added to album.
+    """
+    db_session = get_db_session()
+
+    try:
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+    except NoResultFound:
+        abort(404)
+
+    if obj.author_id != g.user.id:
+        abort(403)
+
+    raise NotImplementedError
+
+
+@bp.route('/<int:album_id>/images/update', methods=('GET', 'POST',))
+@login_required
+def album_images_update(album_id):
+    """
+    Lists all user's images with information if they're already included
+    in selected album and allows to modify this list and save entirely
+    new image list for selected album.
+    """
+    raise NotImplementedError
