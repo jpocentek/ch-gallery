@@ -5,6 +5,7 @@ from flask import (
     g,
     redirect,
     render_template,
+    request,
     url_for
 )
 from sqlalchemy.orm.exc import NoResultFound
@@ -111,7 +112,19 @@ def album_images_add(album_id):
     if obj.author_id != g.user.id:
         abort(403)
 
-    raise NotImplementedError
+    try:
+        id_list = [int(x) for x in request.form.getlist('images')]
+    except (TypeError, ValueError):
+        # Form is not intended to be used directly by site user so
+        # it's most likely that malformed data comes from some
+        # unusual activity. So we do not bother to display exact errors.
+        abort(400)
+
+    obj.images += [x for x in g.user.images if x.id in id_list]
+    db_session.commit()
+
+    flash('Images added succesfully', 'success')
+    return redirect(url_for('image.index'))
 
 
 @bp.route('/<int:album_id>/images/update', methods=('GET', 'POST',))
