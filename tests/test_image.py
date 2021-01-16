@@ -223,13 +223,13 @@ class TestDeleteImageClass:
         assert db_session.query(Image).count() == 0
 
 
-class TestDashboardClass:
+class TestImageIndexClass:
 
-    def test_image_display_in_dashboard(self, app, auth, client, mock_jpg_file):
+    def test_image_display_in_index(self, app, auth, client, mock_jpg_file):
         # Create test image
         auth.login()
         client.post('/image/upload', data={'image': mock_jpg_file})
-        # Enter dashboard page where an image should be displayed
-        response = client.get('/auth/')
+        # Enter image list page where an image should be displayed
+        response = client.get('/image/')
         assert response.status_code == 200
         assert b'/image/uploads/previews/test_picture.jpg' in response.data

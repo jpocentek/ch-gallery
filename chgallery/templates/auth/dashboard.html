@@ -1,27 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if images %}<table class="table" id="dashboardImageTable">
-  <tr>
-    <th class="image-preview">&nbsp;</th>
-    <th>File Name</th>
-    <th>Created</th>
-    <th>Caption</th>
-    <th>Options</th>
-  </tr>
-  {% for image in images %}<tr>
-    <td class="image-preview text-center"><img src="{{ image.preview_url }}"></td>
-    <td><a href="{{ image.url }}">{{ image.name }}</a></td>
-    <td>{{ image.creation_date }}</td>
-    <td>{{ image.description }}</td>
-    <td class="text-center">
-      <form method="post" class="image-delete-form" action="{{ url_for('image.delete', image_id=image.id) }}">
-        <button type="submit" class="close">
-          <span class="text-danger" aria-hidden="true">&times;</span>
-        </button>
-      </form>
-    </td>
-  </tr>{% endfor %}
-</table>{% endif %}
+<h1>Dashboard</h1>
 {% endblock %}
 
 {% block foot_scripts %}

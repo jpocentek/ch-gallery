@@ -53,6 +53,22 @@ def get_unique_filename(filename):
     return final_name
 
 
+@bp.route('/', methods=('GET',))
+@login_required
+def index():
+    """
+    Presents images uploaded by currently authorized user and
+    allows image manipulation (updating and deleting images).
+    """
+    images = (
+        g.db_session.query(Image)
+        .filter(Image.author == g.user)
+        .order_by(Image.creation_date.desc())
+    )
+
+    return render_template('image/index.html', images=images)
+
+
 @bp.route('/upload', methods=('GET', 'POST'))
 @login_required
 def upload():

@@ -14,7 +14,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from chgallery.auth.decorators import login_required
 from chgallery.auth.forms import LoginForm, RegisterForm
 from chgallery.db import get_db_session
-from chgallery.db.declarative import Image, User
+from chgallery.db.declarative import User
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -23,13 +23,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/')
 @login_required
 def dashboard():
-    images = (
-        g.db_session.query(Image)
-        .filter(Image.author == g.user)
-        .order_by(Image.creation_date.desc())
-    )
-
-    return render_template('auth/dashboard.html', images=images)
+    return render_template('auth/dashboard.html')
 
 
 @bp.route('/register', methods=('GET', 'POST'))
