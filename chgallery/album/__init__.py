@@ -1,9 +1,5 @@
-"""
-TODO: Merge 'album_images_add' and 'album_images_update' views.
-"""
 from flask import (
     Blueprint,
-    abort,
     flash,
     g,
     redirect,
@@ -11,38 +7,15 @@ from flask import (
     request,
     url_for
 )
-from sqlalchemy.orm.exc import NoResultFound
+
 from chgallery.auth.decorators import login_required
 from chgallery.db import get_db_session
 from chgallery.db.declarative import Album
 
 from .forms import AlbumForm
+from .helpers import get_album_instance, update_album_images
 
 bp = Blueprint('album', __name__, url_prefix='/album')
-
-
-def get_album_instance(album_id):
-    """
-    Raises 404 response if instance with given ID could not be
-    found in database or 403 if user is not an instance owner.
-    Otherwise returns Album object instance.
-
-    :param int: album_id Selected album instance ID
-
-    :returns: Album object instance
-    :rtype: chgallery.db.declarative.Album
-    """
-    db_session = get_db_session()
-
-    try:
-        obj = db_session.query(Album).filter(Album.id == album_id).one()
-    except NoResultFound:
-        abort(404)
-
-    if obj.author_id != g.user.id:
-        abort(403)
-
-    return obj
 
 
 @bp.route('/', methods=('GET',))
@@ -113,22 +86,8 @@ def album_images_add(album_id):
     to add single selected image on image list view but it actually
     accepts list of ID's of images to be added to album.
     """
-    obj = get_album_instance(album_id)
-
-    try:
-        id_list = [int(x) for x in request.form.getlist('images')]
-    except (TypeError, ValueError):
-        # Form is not intended to be used directly by site user so
-        # it's most likely that malformed data comes from some
-        # unusual activity. So we do not bother to display exact errors.
-        abort(400)
-
-    obj.images += [x for x in g.user.images if x.id in id_list]
-    db_session = get_db_session()
-    db_session.commit()
-
-    flash('Album updated', 'success')
-    return redirect(url_for('image.index'))
+    update_album_images(album_id)
+    return {'status': 'success'}
 
 
 @bp.route('/<int:album_id>/images/update', methods=('GET', 'POST',))
@@ -139,22 +98,10 @@ def album_images_update(album_id):
     in selected album and allows to modify this list and save entirely
     new image list for selected album.
     """
-    obj = get_album_instance(album_id)
-
     if request.method == 'POST':
-        try:
-            id_list = [int(x) for x in request.form.getlist('images')]
-        except (TypeError, ValueError):
-            # Form is not intended to be used directly by site user so
-            # it's most likely that malformed data comes from some
-            # unusual activity. So we do not bother to display exact errors.
-            abort(400)
-
-        obj.images = [x for x in g.user.images if x.id in id_list]
-        db_session = get_db_session()
-        db_session.commit()
-
+        update_album_images(album_id, replace=True)
         flash('Album updated', 'success')
         return redirect(url_for('image.index'))
     else:
+        obj = get_album_instance(album_id)
         return render_template('album/image_update.html', obj=obj, images=g.user.images)

@@ -168,8 +168,9 @@ class TestAddImagesToAlbumClass:
         data = {'images': [image_id]}  # Image does not belong to authorized user
 
         response = client.post(url, data=data)
-        assert response.status_code == 302
-        assert response.headers['location'].endswith(__URLCONFIG__['image_list'])
+        assert response.status_code == 200
+        assert response.headers['content-type'] == 'application/json'
+        assert b'"status": "success"' in response.data
 
         with app.app_context():
             db_session = get_db_session()
