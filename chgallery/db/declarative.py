@@ -97,3 +97,6 @@ class Album(Base):
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.name)
+
+    def absolute_url(self):
+        return url_for('album.album_images', album_id=self.id)

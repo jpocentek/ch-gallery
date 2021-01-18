@@ -7,6 +7,7 @@ from chgallery.db.declarative import Album, Image
 
 __URLCONFIG__ = {
     'album_list': '/album/',
+    'album_images': '/album/{album_id}',
     'album_create': '/album/create',
     'album_update': '/album/{album_id}/update',
     'album_delete': '/album/{album_id}/delete',
@@ -29,6 +30,27 @@ class TestAlbumListClass:
     def test_authorized_user_can_access_album_list(self, auth, client):
         auth.login()
         assert client.get(__URLCONFIG__['album_list']).status_code == 200
+
+
+class TestAlbumDisplayImagesClass:
+
+    def test_that_album_images_are_displayed(self, app, client, load_fake_data):
+        with app.app_context():
+            db_session = get_db_session()
+
+        # Add only the first image to the album
+        album = db_session.query(Album).first()
+        images = db_session.query(Image).all()
+        album.images = [images[0]]
+        db_session.commit()
+
+        with app.app_context():
+            url = album.absolute_url()
+
+        response = client.get(url)
+        assert response.status_code == 200
+        assert images[0].name.encode('utf-8') in response.data
+        assert images[1].name.encode('utf-8') not in response.data
 
 
 class TestAlbumCreateClass:

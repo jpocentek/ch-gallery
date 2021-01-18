@@ -1,5 +1,6 @@
 from flask import (
     Blueprint,
+    abort,
     flash,
     g,
     redirect,
@@ -7,6 +8,7 @@ from flask import (
     request,
     url_for
 )
+from sqlalchemy.orm.exc import NoResultFound
 
 from chgallery.auth.decorators import login_required
 from chgallery.db import get_db_session
@@ -32,6 +34,19 @@ def album_list():
     )
 
     return render_template('album/index.html', albums=albums)
+
+
+@bp.route('/<int:album_id>', methods=('GET',))
+def album_images(album_id):
+    """ Presents gallery view for all images of selected album """
+    db_session = get_db_session()
+
+    try:
+        obj = db_session.query(Album).filter(Album.id == album_id).one()
+    except NoResultFound:
+        abort(404)
+
+    return render_template('index.html', images=obj.images)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
