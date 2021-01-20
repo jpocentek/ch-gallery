@@ -180,6 +180,14 @@ class TestAddImagesToAlbumClass:
         url = __URLCONFIG__['album_add_images'].format(album_id=2)
         assert client.post(url).status_code == 403
 
+    def test_add_album_images_with_invalid_data_returns_400(self, auth, client, load_fake_data):
+        auth.login()
+
+        url = __URLCONFIG__['album_add_images'].format(album_id=1)
+        data = {'images': ['this', 'is', 'invalid', 'data']}
+
+        assert client.post(url, data=data).status_code == 400
+
     def test_image_successfully_added_with_image_add_view(self, app, auth, client, load_fake_data):
         auth.login()
 
