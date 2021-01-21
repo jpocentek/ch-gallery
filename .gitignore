@@ -5,6 +5,7 @@
 .coverage
 
 *.egg-info/
+/.idea/
 /htmlcov/
 /instance/
 /node_modules/
