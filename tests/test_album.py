@@ -34,6 +34,10 @@ class TestAlbumListClass:
 
 class TestAlbumDisplayImagesClass:
 
+    def test_album_does_not_exist_returns_404(self, client):
+        url = __URLCONFIG__['album_images'].format(album_id=1)
+        assert client.get(url).status_code == 404
+
     def test_that_album_images_are_displayed(self, app, client, load_fake_data):
         with app.app_context():
             db_session = get_db_session()
