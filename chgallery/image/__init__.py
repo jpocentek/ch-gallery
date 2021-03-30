@@ -3,6 +3,7 @@ import os
 from PIL import Image as PILImage
 from flask import (
     Blueprint,
+    Response,
     abort,
     current_app,
     flash,
@@ -118,7 +119,10 @@ def display_uploaded_file(filename, dirname=None):
     path = current_app.config['UPLOAD_PATH']
     if dirname is not None:
         path = os.path.join(path, dirname)
-    return send_from_directory(path, filename)
+    with open(os.path.join(path, filename), 'rb') as fp:
+        contents = fp.read()
+    # TODO: Mime types
+    return Response(contents, content_type='image/jpeg')
 
 
 @bp.route('/uploads/<filename>')

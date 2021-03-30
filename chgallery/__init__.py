@@ -3,6 +3,7 @@ from flask import Flask, render_template
 
 from chgallery.db import get_db_session
 from chgallery.db.declarative import Image
+from chgallery.middleware import PrefixMiddleware
 
 
 def create_app(test_config=None):
@@ -33,6 +34,10 @@ def create_app(test_config=None):
         os.makedirs(os.path.join(app.config['UPLOAD_PATH'], 'previews'))
     except OSError:
         pass
+
+    # In case that application is mounted outside of the server root,
+    # e.g. /admin we can set this common prefix here for all url rules.
+    app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config["ROOT_URL_PREFIX"])  # type: ignore
 
     # basic view for non-registered users
     @app.route('/')
